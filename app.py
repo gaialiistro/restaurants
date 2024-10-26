@@ -5,9 +5,9 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 from dash.dependencies import Input, Output
+from datetime import datetime, timedelta
+import os
 
-# Updated data with images and Google Maps links
-# Sample data with added images and Google Maps links
 data = [
     {
         'name': 'Goram & Vincent, Bristol Avon Gorge',
@@ -24,7 +24,7 @@ data = [
         'food': '7/10',
         'atmosphere': '6/6',
         'price': '9/9.5',
-        'image': 'https://media.timeout.com/images/105239240/image.jpg',
+        'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/0a/a3/db/restaurant-interior.jpg?w=1200&h=-1&s=1',
         'maps_link': 'https://goo.gl/maps/MRbq8eA6wztWLm8j8'
     },
     {
@@ -33,7 +33,7 @@ data = [
         'food': '6/7',
         'atmosphere': '4.5/4',
         'price': '7/6',
-        'image': 'https://media.timeout.com/images/105239241/image.jpg',
+        'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/0a/a3/db/restaurant-interior.jpg?w=1200&h=-1&s=1',
         'maps_link': 'https://goo.gl/maps/BwZ2fFdh9xn72ZVE9'
     },
     {
@@ -102,9 +102,13 @@ df['overall_his'] = df[['service_his', 'food_his', 'atmosphere_his', 'price_his'
 df['overall_mine'] = df[['service_mine', 'food_mine', 'atmosphere_mine', 'price_mine']].mean(axis=1)
 best_overall = df.loc[df[['overall_his', 'overall_mine']].mean(axis=1).idxmax()]
 
-# Create Dash app
+
+# Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = 'Restaurant Ratings Dashboard'
+
+# Timer component for the "Next Visit" tab
+next_visit_date = datetime(2024, 10, 30, 9, 45)  # Set your next visit date here
 
 # Graphs
 avg_ratings_df = pd.DataFrame({
@@ -125,7 +129,7 @@ fig_best_overall = px.bar(best_overall_ratings_df, x='name', y=['overall_his', '
                           color_discrete_map={'overall_his': '#0067A5', 'overall_mine': '#FFD700'})
 
 # App layout
-app.layout = html.Div([
+ratings_layout = html.Div([
     dbc.Container([
         html.H1('Our Restaurant Ratings', className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
         dbc.Row([
@@ -176,6 +180,50 @@ app.layout = html.Div([
     ], fluid=True)
 ], style={'background-color': '#f0f0f5'})
 
+# Layout for "Next Visit" page
+next_visit_layout = html.Div([
+    html.H1("Countdown to Next Visit", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
+    html.Div(id='countdown', className='text-center', style={'font-size': '50px', 'font-weight': 'bold', 'margin-top': '20px'}),
+    html.H3("Next Visit Details", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
+    html.P("Taking the Eurostar to London", className='text-center', style={'font-size': '24px', 'margin-top': '10px'}),
+    html.P("Arrival at St Pancras Station at 09:45", className='text-center', style={'font-size': '24px'})
+], style={'background-color': '#f0f0f5', 'height': '100vh', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'center', 'align-items': 'center'})
+
+# Tabs for navigation
+app.layout = html.Div([
+    dcc.Tabs(id="tabs", value='ratings', children=[
+        dcc.Tab(label='Our Ratings Dashboard', value='ratings'),
+        dcc.Tab(label='Next Visit', value='next_visit'),
+    ]),
+    html.Div(id='tabs-content')
+])
+
+# Callback to switch between tabs
+@app.callback(
+    Output('tabs-content', 'children'),
+    [Input('tabs', 'value')]
+)
+def render_tab_content(tab):
+    if tab == 'ratings':
+        return ratings_layout
+    elif tab == 'next_visit':
+        return next_visit_layout
+
+# Callback to update the countdown timer
+@app.callback(
+    Output('countdown', 'children'),
+    [Input('tabs', 'value')]
+)
+def update_countdown(tab):
+    if tab == 'next_visit':
+        time_remaining = next_visit_date - datetime.now()
+        days, remainder = divmod(time_remaining.total_seconds(), 86400)
+        hours, remainder = divmod(remainder, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        return f"{int(days)}d {int(hours)}h {int(minutes)}m {int(seconds)}s"
+    return ""
+
 # Run server
+
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8050)
+    app.run_server(debug=True, port=int(os.environ.get("PORT", 8050)), host='0.0.0.0')
