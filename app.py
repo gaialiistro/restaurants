@@ -184,7 +184,7 @@ ratings_layout = html.Div([
 
 # Layout for "Next Visit" page
 next_visit_layout = html.Div([
-    html.H1("🇮🇹 ❤️ Countdown to Next Visit ❤️ 🇮🇹", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold', 'color': '#ff6347'}),
+    html.H1("🇮🇹 ❤️ Countdown to Next Meeting ❤️ 🇮🇹", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold', 'color': '#ff6347'}),
     html.Div(id='countdown', className='text-center', style={'font-size': '60px', 'font-weight': 'bold', 'margin-top': '20px', 'color': '#ff4500'}),
     html.H3("Bologna", className='text-center my-4', style={'font-family': 'Comic Sans MS, cursive', 'font-weight': 'bold', 'color': '#ff6347'}),
     html.Div(style={
