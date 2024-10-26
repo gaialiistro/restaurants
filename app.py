@@ -8,6 +8,8 @@ from dash.dependencies import Input, Output
 from datetime import datetime, timedelta
 import os
 
+# Updated data with images and Google Maps links
+# Sample data with added images and Google Maps links
 data = [
     {
         'name': 'Goram & Vincent, Bristol Avon Gorge',
@@ -24,8 +26,8 @@ data = [
         'food': '7/10',
         'atmosphere': '6/6',
         'price': '9/9.5',
-        'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/0a/a3/db/restaurant-interior.jpg?w=1200&h=-1&s=1',
-        'maps_link': 'https://goo.gl/maps/MRbq8eA6wztWLm8j8'
+        'image': 'https://www.thegoodfoodguide.co.uk/images/restaurant/210312_1864612_Interior%201[xya:1360x680].jpg',
+        'maps_link': 'https://www.adelinayard.com/'
     },
     {
         'name': 'Pasture',
@@ -33,8 +35,8 @@ data = [
         'food': '6/7',
         'atmosphere': '4.5/4',
         'price': '7/6',
-        'image': 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/0a/a3/db/restaurant-interior.jpg?w=1200&h=-1&s=1',
-        'maps_link': 'https://goo.gl/maps/BwZ2fFdh9xn72ZVE9'
+        'image': 'https://cdn.sanity.io/images/90b5g4ze/production/b6b00f5153dad28ae121aba2e3c2c74412ce40be-2000x1009.jpg?w=1300&h=656&auto=format',
+        'maps_link': 'https://pasturerestaurant.com/locations/pasture-bristol/'
     },
     {
         'name': 'Marceline',
@@ -42,8 +44,8 @@ data = [
         'food': '8/9',
         'atmosphere': '8/7',
         'price': '8/8',
-        'image': 'https://media.timeout.com/images/105239242/image.jpg',
-        'maps_link': 'https://goo.gl/maps/pK7GmopK8pZTB3P79'
+        'image': 'https://canarywharf.com/wp-content/uploads/2024/05/PS-1.jpg',
+        'maps_link': 'http://www.marceline.london/'
     },
     {
         'name': 'Cheeky Scones',
@@ -51,8 +53,8 @@ data = [
         'food': '7/8',
         'atmosphere': '3/6',
         'price': '9/7',
-        'image': 'https://media.timeout.com/images/105239243/image.jpg',
-        'maps_link': 'https://goo.gl/maps/D6ZDHzFz7b6x2Tyv6'
+        'image': 'https://images.squarespace-cdn.com/content/v1/63ef654b857ef246af30b0de/ce9a1da7-dcfb-41bb-87ba-64c0238e42cb/tempImageA76mKj.jpg',
+        'maps_link': 'https://www.cheekyscone.com/'
     },
     {
         'name': 'Da Corradi',
@@ -60,8 +62,8 @@ data = [
         'food': '2/3',
         'atmosphere': '8/9',
         'price': '3/2',
-        'image': 'https://media.timeout.com/images/105239244/image.jpg',
-        'maps_link': 'https://goo.gl/maps/zvxdLQ5eT4F2'
+        'image': 'https://dacorradi.com/wp-content/uploads/2024/04/285160934_314266920895185_6708643095931781791_n-1.jpg',
+        'maps_link': 'http://www.dacorradi.com/'
     },
     {
         'name': 'Ivy in the Park',
@@ -69,8 +71,8 @@ data = [
         'food': '6.4/8',
         'atmosphere': '7.5/7.5',
         'price': '8/8',
-        'image': 'https://media.timeout.com/images/105239245/image.jpg',
-        'maps_link': 'https://goo.gl/maps/7PRRpdkXNGQ2'
+        'image': 'https://lh3.googleusercontent.com/p/AF1QipPHY2EA14ryyS3XS_IyScuVJbDxM0wja-Pb1HJp=s680-w680-h510',
+        'maps_link': 'https://ivycollection.com/restaurants/the-ivy-in-the-park/?utm_source=LocalGoogle&utm_medium=Organic'
     }
 ]
 
@@ -79,54 +81,54 @@ df = pd.DataFrame(data)
 
 # Calculate statistics
 def parse_ratings(rating_str):
-    his, mine = rating_str.split('/')
-    return float(his) if his != '-' else np.nan, float(mine) if mine != '-' else np.nan
+    his, her = rating_str.split('/')
+    return float(his) if his != '-' else np.nan, float(her) if her != '-' else np.nan
 
-df[['service_his', 'service_mine']] = df['service'].apply(lambda x: pd.Series(parse_ratings(x)))
-df[['food_his', 'food_mine']] = df['food'].apply(lambda x: pd.Series(parse_ratings(x)))
-df[['atmosphere_his', 'atmosphere_mine']] = df['atmosphere'].apply(lambda x: pd.Series(parse_ratings(x)))
-df[['price_his', 'price_mine']] = df['price'].apply(lambda x: pd.Series(parse_ratings(x)))
+df[['service_his', 'service_her']] = df['service'].apply(lambda x: pd.Series(parse_ratings(x)))
+df[['food_his', 'food_her']] = df['food'].apply(lambda x: pd.Series(parse_ratings(x)))
+df[['atmosphere_his', 'atmosphere_her']] = df['atmosphere'].apply(lambda x: pd.Series(parse_ratings(x)))
+df[['price_his', 'price_her']] = df['price'].apply(lambda x: pd.Series(parse_ratings(x)))
 
 # Average ratings per category
 avg_service_his = df['service_his'].mean()
-avg_service_mine = df['service_mine'].mean()
+avg_service_her = df['service_her'].mean()
 avg_food_his = df['food_his'].mean()
-avg_food_mine = df['food_mine'].mean()
+avg_food_her = df['food_her'].mean()
 avg_atmosphere_his = df['atmosphere_his'].mean()
-avg_atmosphere_mine = df['atmosphere_mine'].mean()
+avg_atmosphere_her = df['atmosphere_her'].mean()
 avg_price_his = df['price_his'].mean()
-avg_price_mine = df['price_mine'].mean()
+avg_price_her = df['price_her'].mean()
 
 # Best overall restaurant
 df['overall_his'] = df[['service_his', 'food_his', 'atmosphere_his', 'price_his']].mean(axis=1)
-df['overall_mine'] = df[['service_mine', 'food_mine', 'atmosphere_mine', 'price_mine']].mean(axis=1)
-best_overall = df.loc[df[['overall_his', 'overall_mine']].mean(axis=1).idxmax()]
+df['overall_her'] = df[['service_her', 'food_her', 'atmosphere_her', 'price_her']].mean(axis=1)
+best_overall = df.loc[df[['overall_his', 'overall_her']].mean(axis=1).idxmax()]
 
 
 # Dash app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 app.title = 'Restaurant Ratings Dashboard'
 
 # Timer component for the "Next Visit" tab
-next_visit_date = datetime(2024, 10, 30, 9, 45)  # Set your next visit date here
+next_visit_date = datetime(2024, 10, 30, 23, 45)  # Set your next visit date here
 
 # Graphs
 avg_ratings_df = pd.DataFrame({
     'Category': ['Service', 'Food', 'Atmosphere', 'Price'],
     'His Average': [avg_service_his, avg_food_his, avg_atmosphere_his, avg_price_his],
-    'My Average': [avg_service_mine, avg_food_mine, avg_atmosphere_mine, avg_price_mine]
+    'Her Average': [avg_service_her, avg_food_her, avg_atmosphere_her, avg_price_her]
 })
 
-fig_avg_ratings = px.bar(avg_ratings_df, x='Category', y=['His Average', 'My Average'],
+fig_avg_ratings = px.bar(avg_ratings_df, x='Category', y=['His Average', 'Her Average'],
                          barmode='group', title='Average Ratings per Category',
                          labels={'value': 'Average Rating', 'Category': 'Category'},
-                         color_discrete_map={'His Average': '#0067A5', 'My Average': '#FFD700'})
+                         color_discrete_map={'His Average': '#0067A5', 'Her Average': '#FFD700'})
 
-best_overall_ratings_df = df[['name', 'overall_his', 'overall_mine']]
-fig_best_overall = px.bar(best_overall_ratings_df, x='name', y=['overall_his', 'overall_mine'],
+best_overall_ratings_df = df[['name', 'overall_his', 'overall_her']]
+fig_best_overall = px.bar(best_overall_ratings_df, x='name', y=['overall_his', 'overall_her'],
                           barmode='group', title='Overall Ratings per Restaurant',
                           labels={'value': 'Overall Rating', 'name': 'Restaurant'},
-                          color_discrete_map={'overall_his': '#0067A5', 'overall_mine': '#FFD700'})
+                          color_discrete_map={'overall_his': '#0067A5', 'overall_her': '#FFD700'})
 
 # App layout
 ratings_layout = html.Div([
@@ -142,22 +144,22 @@ ratings_layout = html.Div([
                     html.Div([
                         html.P('Service:', style={'font-weight': 'bold', 'margin-bottom': '2px'}),
                         html.Span('★' * int(row['service_his']) if not np.isnan(row['service_his']) else '', style={'color': '#FFD700', 'margin-right': '5px'}),
-                        html.Span('★' * int(row['service_mine']) if not np.isnan(row['service_mine']) else '', style={'color': '#0067A5'})
+                        html.Span('★' * int(row['service_her']) if not np.isnan(row['service_her']) else '', style={'color': '#0067A5'})
                     ], style={'margin-bottom': '5px'}),
                     html.Div([
                         html.P('Food:', style={'font-weight': 'bold', 'margin-bottom': '2px'}),
                         html.Span('★' * int(row['food_his']) if not np.isnan(row['food_his']) else '', style={'color': '#FFD700', 'margin-right': '5px'}),
-                        html.Span('★' * int(row['food_mine']) if not np.isnan(row['food_mine']) else '', style={'color': '#0067A5'})
+                        html.Span('★' * int(row['food_her']) if not np.isnan(row['food_her']) else '', style={'color': '#0067A5'})
                     ], style={'margin-bottom': '5px'}),
                     html.Div([
                         html.P('Atmosphere:', style={'font-weight': 'bold', 'margin-bottom': '2px'}),
                         html.Span('★' * int(row['atmosphere_his']) if not np.isnan(row['atmosphere_his']) else '', style={'color': '#FFD700', 'margin-right': '5px'}),
-                        html.Span('★' * int(row['atmosphere_mine']) if not np.isnan(row['atmosphere_mine']) else '', style={'color': '#0067A5'})
+                        html.Span('★' * int(row['atmosphere_her']) if not np.isnan(row['atmosphere_her']) else '', style={'color': '#0067A5'})
                     ], style={'margin-bottom': '5px'}),
                     html.Div([
                         html.P('Price:', style={'font-weight': 'bold', 'margin-bottom': '2px'}),
                         html.Span('★' * int(row['price_his']) if not np.isnan(row['price_his']) else '', style={'color': '#FFD700', 'margin-right': '5px'}),
-                        html.Span('★' * int(row['price_mine']) if not np.isnan(row['price_mine']) else '', style={'color': '#0067A5'})
+                        html.Span('★' * int(row['price_her']) if not np.isnan(row['price_her']) else '', style={'color': '#0067A5'})
                     ], style={'margin-bottom': '5px'}),
                 ], className='restaurant-block text-center p-3', style={'background-color': '#f9f9f9', 'border-radius': '15px', 'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.1)', 'margin-bottom': '20px'})
             ], md=4, xs=12)
@@ -167,11 +169,11 @@ ratings_layout = html.Div([
             html.H3('Statistics', className='my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
             html.P(f'Best Overall Restaurant: {best_overall["name"]}', style={'font-weight': 'bold'}),
             html.P(f"His Favorite: {df.loc[df['overall_his'].idxmax()]['name']}", style={'font-weight': 'bold'}),
-            html.P(f"My Favorite: {df.loc[df['overall_mine'].idxmax()]['name']}", style={'font-weight': 'bold'}),
-            html.P(f'Average Service Rating - His: {avg_service_his:.1f}, Mine: {avg_service_mine:.1f}', style={'font-weight': 'bold'}),
-            html.P(f'Average Food Rating - His: {avg_food_his:.1f}, Mine: {avg_food_mine:.1f}', style={'font-weight': 'bold'}),
-            html.P(f'Average Atmosphere Rating - His: {avg_atmosphere_his:.1f}, Mine: {avg_atmosphere_mine:.1f}', style={'font-weight': 'bold'}),
-            html.P(f'Average Price Rating - His: {avg_price_his:.1f}, Mine: {avg_price_mine:.1f}', style={'font-weight': 'bold'})
+            html.P(f"Her Favorite: {df.loc[df['overall_her'].idxmax()]['name']}", style={'font-weight': 'bold'}),
+            html.P(f'Average Service Rating - His: {avg_service_his:.1f}, Her: {avg_service_her:.1f}', style={'font-weight': 'bold'}),
+            html.P(f'Average Food Rating - His: {avg_food_his:.1f}, Her: {avg_food_her:.1f}', style={'font-weight': 'bold'}),
+            html.P(f'Average Atmosphere Rating - His: {avg_atmosphere_his:.1f}, Her: {avg_atmosphere_her:.1f}', style={'font-weight': 'bold'}),
+            html.P(f'Average Price Rating - His: {avg_price_his:.1f}, Her: {avg_price_her:.1f}', style={'font-weight': 'bold'})
         ], className='statistics-block p-3', style={'background-color': '#ffffff', 'border-radius': '15px', 'box-shadow': '0 4px 8px rgba(0, 0, 0, 0.1)', 'margin-top': '30px'}),
         dbc.Container([
             dcc.Graph(figure=fig_avg_ratings),
@@ -182,12 +184,22 @@ ratings_layout = html.Div([
 
 # Layout for "Next Visit" page
 next_visit_layout = html.Div([
-    html.H1("Countdown to Next Visit", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
-    html.Div(id='countdown', className='text-center', style={'font-size': '50px', 'font-weight': 'bold', 'margin-top': '20px'}),
-    html.H3("Next Visit Details", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold'}),
-    html.P("Taking the Eurostar to London", className='text-center', style={'font-size': '24px', 'margin-top': '10px'}),
-    html.P("Arrival at St Pancras Station at 09:45", className='text-center', style={'font-size': '24px'})
-], style={'background-color': '#f0f0f5', 'height': '100vh', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'center', 'align-items': 'center'})
+    html.H1("🇮🇹 ❤️ Countdown to Next Visit ❤️ 🇮🇹", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold', 'color': '#ff6347'}),
+    html.Div(id='countdown', className='text-center', style={'font-size': '60px', 'font-weight': 'bold', 'margin-top': '20px', 'color': '#ff4500'}),
+    html.H3("Next Visit Details", className='text-center my-4', style={'font-family': 'Comic Sans MS, cursive', 'font-weight': 'bold', 'color': '#ff6347'}),
+    html.Div(style={
+        'background-image': 'url(https://www.tasteatlas.com/images/dishes/53133d5e91f847c39d0b63f27340b712/bologna.jpg)',
+        'background-size': 'cover',
+        'background-position': 'center',
+        'position': 'absolute',
+        'top': '0',
+        'left': '0',
+        'right': '0',
+        'bottom': '0',
+        'z-index': '-1',
+        'opacity': '0.2'
+    })
+], style={'background-color': '#f0f0f5', 'height': '100vh', 'display': 'flex', 'flex-direction': 'column', 'justify-content': 'center', 'align-items': 'center', 'position': 'relative'})
 
 # Tabs for navigation
 app.layout = html.Div([
@@ -220,8 +232,9 @@ def update_countdown(tab):
         days, remainder = divmod(time_remaining.total_seconds(), 86400)
         hours, remainder = divmod(remainder, 3600)
         minutes, seconds = divmod(remainder, 60)
-        return f"{int(days)}d {int(hours)}h {int(minutes)}m {int(seconds)}s"
+        return f"{int(days)}d {int(hours)}h {int(minutes)}m"
     return ""
+
 
 # Run server
 
