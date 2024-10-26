@@ -186,7 +186,7 @@ ratings_layout = html.Div([
 next_visit_layout = html.Div([
     html.H1("🇮🇹 ❤️ Countdown to Next Visit ❤️ 🇮🇹", className='text-center my-4', style={'font-family': 'Arial, sans-serif', 'font-weight': 'bold', 'color': '#ff6347'}),
     html.Div(id='countdown', className='text-center', style={'font-size': '60px', 'font-weight': 'bold', 'margin-top': '20px', 'color': '#ff4500'}),
-    html.H3("Next Visit Details", className='text-center my-4', style={'font-family': 'Comic Sans MS, cursive', 'font-weight': 'bold', 'color': '#ff6347'}),
+    html.H3("Bologna", className='text-center my-4', style={'font-family': 'Comic Sans MS, cursive', 'font-weight': 'bold', 'color': '#ff6347'}),
     html.Div(style={
         'background-image': 'url(https://www.tasteatlas.com/images/dishes/53133d5e91f847c39d0b63f27340b712/bologna.jpg)',
         'background-size': 'cover',
